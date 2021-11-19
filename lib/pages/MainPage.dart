@@ -4,6 +4,7 @@ import 'package:untitled/models/quote.dart';
 import 'package:untitled/widgets/quote_template.dart';
 import 'package:untitled/widgets/slidable_widget.dart';
 
+
 class MainPage extends StatefulWidget {
   //const MainPage({Key key}) : super(key: key);
   @override
@@ -59,7 +60,7 @@ class _MainPageState extends State<MainPage> {
 
   Future refresh () async{
     setState(()=> isLoading = true);
-    quotes = await DbHelper.instance.readAllQuotes();
+    quotes = await DbHelper.instance.readAll();
     setState(()=> isLoading = false);
   }
 
@@ -106,19 +107,25 @@ class _MainPageState extends State<MainPage> {
         slivers:  <Widget> [
           SliverToBoxAdapter(
             child: FutureBuilder<List<Quote>>(
-              future: DbHelper.instance.readAllQuotes(),
+              future: DbHelper.instance.readAll(),
               builder: (BuildContext context, AsyncSnapshot<List<Quote>> snapshot){
                 if (!snapshot.hasData) {
-                  return const Center(child: Text('Loading..'));
+                  return const Center(child: Text('Loading..',style: TextStyle(color: Colors.white),),);
                 }
-                return snapshot.data!.isEmpty?
-                  const Center(child:Text('No item found')): ListView.builder(
+                return snapshot.data!.isEmpty? const Center(
+                          child: Text(
+                            'Empty database',
+                            style: TextStyle(color: Colors.white),
+                          ),
+                        )
+                      : ListView.builder(
                       primary: false,
                       shrinkWrap: true,
                       itemCount: noOfItem,
                       itemBuilder: (BuildContext context, int index){
                         return SlidableWidget(
                           child: QuoteTemplate(quotes[index]),
+                          quote: quotes[index],
                         );
                       },
                     );
@@ -161,9 +168,11 @@ class _MainPageState extends State<MainPage> {
     );
   }
 
-  void bottomSheet(context) {
-
-
+  void bottomSheet(BuildContext context, {Quote? quote}) {
+    if (quote!=null){
+      quoteController.text  = quote.description;
+      authorController.text = quote.author;
+    }
     showModalBottomSheet<dynamic>(
         isScrollControlled: true,
         backgroundColor: Colors.transparent,
@@ -255,6 +264,4 @@ class _MainPageState extends State<MainPage> {
           );
         });
   }
-
-
 }

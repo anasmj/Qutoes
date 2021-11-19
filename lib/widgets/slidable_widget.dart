@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:untitled/db/db_helper.dart';
+import 'package:untitled/models/quote.dart';
+
 
 class SlidableWidget extends StatelessWidget{
   final Widget child;
-  const SlidableWidget ({required this.child});
+  final Quote quote;
+  const SlidableWidget ({required this.child, required this.quote});
 
   Widget build(BuildContext context){
       return Slidable(
@@ -24,6 +27,8 @@ class SlidableWidget extends StatelessWidget{
             color: Colors.blue[300],
             icon: Icons.edit,
             onTap: (){
+              //
+
               print("edit pressed");
             },
           ),
@@ -32,8 +37,9 @@ class SlidableWidget extends StatelessWidget{
             caption: 'Delete',
             color: Colors.red,
             icon: Icons.delete,
-            onTap: (){
-              print("deletepressed");
+            onTap: ()async{
+              await DbHelper.instance.delete(quote.id!);
+
             },
           ),
 

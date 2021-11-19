@@ -39,7 +39,7 @@ class DbHelper {
     return quote.copy(id: id);
   }
 
-  Future<Quote> readQuote (int id) async {
+  Future<Quote> read(int id) async {
     final db= await instance.database;
     final map = await db.query(
       quoteTable,
@@ -49,13 +49,13 @@ class DbHelper {
     );
     return map.isNotEmpty? Quote.fromMaptoObj(map.first): throw Exception('ID $id is invalid');
   }
-  Future<List<Quote>> readAllQuotes() async{
+  Future<List<Quote>> readAll() async{
     final orderBy = '${QuoteFields.id} ASC';
     final db = await instance.database;
     final result = await db.query(quoteTable, orderBy: orderBy);
     return result.map((e)=>Quote.fromMaptoObj(e)).toList();
   }
-  Future<int> updateQuote(Quote quote) async{
+  Future<int> update(Quote quote) async{
     final db = await instance.database;
     return db.update(
       quoteTable,
@@ -64,7 +64,7 @@ class DbHelper {
       whereArgs: [quote.id]
     );
   }
-  Future<int> deleteQuote(int id) async{
+  Future<int> delete(int id) async{
     final db = await instance.database;
     return await db.delete(
       quoteTable,

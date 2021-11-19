@@ -31,11 +31,11 @@ class QuoteTemplateState extends State<QuoteTemplate> {
                 // middle column
                 children: <Widget>[
                   Container(
-                    margin: EdgeInsets.fromLTRB(16.0, 8.0, 0.0, 0.0),
+                    margin: const EdgeInsets.fromLTRB(16.0, 8.0, 0.0, 0.0),
                     //color: Colors.orange,
                     child: SelectableText(
                       widget.quote.description,
-                      style: TextStyle(
+                      style: const TextStyle(
                         color: Colors.white70,
                         fontSize: 20,
                       ),
@@ -45,10 +45,10 @@ class QuoteTemplateState extends State<QuoteTemplate> {
                   Align(
                       alignment: Alignment.bottomLeft,
                       child: Padding(
-                        padding: EdgeInsets.fromLTRB(16.0, 8.0, 0.0, 0.0),
+                        padding: const EdgeInsets.fromLTRB(16.0, 8.0, 0.0, 0.0),
                         child: Text(
                           widget.quote.author,
-                          style: TextStyle(
+                          style: const TextStyle(
                             fontSize: 16.0,
                             fontWeight: FontWeight.bold,
                             color: Colors.white70,
@@ -57,7 +57,7 @@ class QuoteTemplateState extends State<QuoteTemplate> {
                       )
                   ),
                   Padding(
-                    padding: EdgeInsets.fromLTRB(40.0, 10.0, 0.0, 10.0),
+                    padding: const EdgeInsets.fromLTRB(40.0, 10.0, 0.0, 10.0),
                     child: Container(
                       height: 5.0,
                       width: 150.0,
@@ -80,7 +80,7 @@ class QuoteTemplateState extends State<QuoteTemplate> {
                 ),
 
                 IconButton(
-                  icon: Icon(Icons.copy, color: Colors.white70,),
+                  icon: const Icon(Icons.copy, color: Colors.white70,),
                   onPressed: () {
                     print("copy");
                     //TODO a snackbar saying 'coppied'
@@ -93,21 +93,6 @@ class QuoteTemplateState extends State<QuoteTemplate> {
           ],
         ),
       ),
-    );
-  }
-
-  Widget getStar() {
-    return Icon(
-      Icons.star,
-      color: Colors.white70,
-
-    );
-  }
-
-  getStarBorder() {
-    return Icon(
-      Icons.star_border,
-      color: Colors.white70,
     );
   }
 }
