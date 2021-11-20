@@ -3,7 +3,8 @@ import 'package:untitled/db/db_helper.dart';
 import 'package:untitled/models/quote.dart';
 import 'package:untitled/widgets/quote_template.dart';
 import 'package:untitled/widgets/slidable_widget.dart';
-
+import 'dart:async';
+StreamController <Quote> streamController = StreamController();
 
 class MainPage extends StatefulWidget {
   //const MainPage({Key key}) : super(key: key);
@@ -15,7 +16,6 @@ class _MainPageState extends State<MainPage> {
   Color appColor = const Color(0xff272350);
   TextEditingController quoteController = TextEditingController();
   TextEditingController authorController = TextEditingController();
-
   // static const List<Quote> quotes = [
   //   Quote(
   //       description:
@@ -69,8 +69,15 @@ class _MainPageState extends State<MainPage> {
     super.initState();
     refresh();
     countItem();
+    streamController.stream.listen((quote){
+        openBottomSheet(quote: quote);
+    });
   }
-
+  void openBottomSheet({required Quote quote}){
+    setState(() {
+      bottomSheet(context, quote: quote);
+    });
+  }
   @override
   void dispose(){
     super.dispose();
@@ -79,30 +86,10 @@ class _MainPageState extends State<MainPage> {
   void countItem () async => noOfItem = await DbHelper.instance.getCount();
   Widget build(BuildContext context) {
     countItem();
+    refresh ();
     return Scaffold(
       resizeToAvoidBottomInset: false,
       backgroundColor: appColor, //Color(0xff272350),
-      // body: Center(
-      //   child: FutureBuilder<List<Quote>>(
-      //     future: DbHelper.instance.readAllQuotes(),
-      //     builder: (BuildContext context, AsyncSnapshot<List<Quote>> snapshot){
-      //       if(!snapshot.hasData){
-      //         return const Center(child: Text('Loading..'));
-      //       }
-      //       return snapshot.data!.isEmpty?
-      //       const Center(child:Text('No item found')): ListView(
-      //         children: snapshot.data!.map((e)=>Center(
-      //           child: Card(
-      //             child: ListTile(
-      //               title: Text(e.description),
-      //             ),
-      //           ),
-      //         )).toList(),
-      //       );
-      //     },
-      //   ),
-      // ),
-
       body: CustomScrollView(
         slivers:  <Widget> [
           SliverToBoxAdapter(
@@ -134,23 +121,6 @@ class _MainPageState extends State<MainPage> {
           ),
         ],
       ),
-
-      // body: CustomScrollView(
-      //   slivers: <Widget>[
-      //     SliverToBoxAdapter(
-      //       child: ListView.builder(
-      //         primary: false,
-      //         shrinkWrap: true,
-      //         itemCount: quotes.length,
-      //         itemBuilder: (BuildContext context, int position) {
-      //           return SlidableWidget(
-      //             child: QuoteTemplate(quotes[position]),
-      //           );
-      //         },
-      //       ),
-      //     ),
-      //   ],
-      // ),
 
       floatingActionButton: FloatingActionButton(
         child: const Icon(
@@ -203,6 +173,7 @@ class _MainPageState extends State<MainPage> {
                     //cursorColor: Colors.red,
                     maxLines: 5,
                     style: const TextStyle(
+                      color: Colors.white,
                       fontSize: 22.0,
                     ),
                     decoration: InputDecoration(
@@ -222,6 +193,7 @@ class _MainPageState extends State<MainPage> {
                     controller: authorController,
                     maxLength: 50,
                     maxLines: 1,
+                    style: const TextStyle(color: Colors.white),
                     decoration: InputDecoration(
                       //fillColor: Color(0xff58656C),
                       filled: true,
@@ -253,7 +225,11 @@ class _MainPageState extends State<MainPage> {
                   ),
                 ),
                 RaisedButton(
-                  onPressed: () => Navigator.pop(context),
+                  onPressed: () {
+                    Navigator.pop(context);
+                    quoteController.clear();
+                    authorController.clear();
+                  },
                   color: const Color(0xC897C5F2),
                   shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(30)),

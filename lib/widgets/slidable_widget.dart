@@ -2,12 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:untitled/db/db_helper.dart';
 import 'package:untitled/models/quote.dart';
+import 'dart:async';
 
+import 'package:untitled/pages/MainPage.dart';
 
 class SlidableWidget extends StatelessWidget{
   final Widget child;
   final Quote quote;
-  const SlidableWidget ({required this.child, required this.quote});
+  SlidableWidget ({required this.child, required this.quote});
 
   Widget build(BuildContext context){
       return Slidable(
@@ -27,9 +29,7 @@ class SlidableWidget extends StatelessWidget{
             color: Colors.blue[300],
             icon: Icons.edit,
             onTap: (){
-              //
-
-              print("edit pressed");
+              streamController.add(quote);
             },
           ),
 
@@ -39,7 +39,6 @@ class SlidableWidget extends StatelessWidget{
             icon: Icons.delete,
             onTap: ()async{
               await DbHelper.instance.delete(quote.id!);
-
             },
           ),
 
