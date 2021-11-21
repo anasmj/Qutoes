@@ -16,44 +16,6 @@ class _MainPageState extends State<MainPage> {
   Color appColor = const Color(0xff272350);
   TextEditingController quoteController = TextEditingController();
   TextEditingController authorController = TextEditingController();
-  // static const List<Quote> quotes = [
-  //   Quote(
-  //       description:
-  //           "The greatest glory in living lies not in never falling, but in rising every time we fall.",
-  //       author: "- Nelson Mandela"),
-  //   Quote(
-  //       description:
-  //           "The best and most beautiful things in the world cannot be seen or even touched - they must be felt with the heart.",
-  //       author: "- Helen Keller"),
-  //   Quote(
-  //       description:
-  //           "When you reach the end of your rope, tie a knot in it and hang on.",
-  //       author: "- Franklin D. Roosevelt"),
-  //   Quote(
-  //       description:
-  //           "If you look at what you have in life, you'll always have more. If you look at what you don't have in life, you'll never have enough.",
-  //       author: " -Oprah Winfrey"),
-  //   Quote(
-  //       description:
-  //           "If you set your goals ridiculously high and it's a failure, you will fail above everyone else's success.",
-  //       author: "-James Cameron"),
-  //   Quote(
-  //       description:
-  //           "Do not go where the path may lead, go instead where there is no path and leave a trail.",
-  //       author: " -Ralph Waldo Emerson"),
-  //   Quote(
-  //       description:
-  //           "The real test is not whether you avoid this failure, because you won't. It's whether you let it harden or shame you into inaction, or whether you learn from it; whether you choose to persevere.",
-  //       author: " -Barack Obama"),
-  //   Quote(
-  //       description:
-  //           "Success is not final; failure is not fatal: It is the courage to continue that counts",
-  //       author: " -Winston S. Churchil"),
-  //   Quote(
-  //       description:
-  //           "Success usually comes to those who are too busy to be looking for it.",
-  //       author: "- Henry David Thoreau"),
-  // ];
   bool isLoading = false;
   late List<Quote> quotes;
   late int noOfItem = 0;
@@ -210,6 +172,17 @@ class _MainPageState extends State<MainPage> {
                   padding: const EdgeInsets.fromLTRB(120, 20, 120, 0),
                   child: RaisedButton(
                     onPressed: () {
+                      if(quote!=null){
+                        print(quote.id);
+                        DbHelper.instance.delete(quote.id!);
+                        DbHelper.instance.update(quote.copy(
+                          id: quote.id,
+                          description: quoteController.text,
+                          author: authorController.text,
+
+                        ));
+                      }
+
                       DbHelper.instance.insert(Quote(
                           description: quoteController.text,
                           author: authorController.text));
@@ -217,6 +190,7 @@ class _MainPageState extends State<MainPage> {
                       quoteController.clear();
                       authorController.clear();
                       Navigator.pop(context);
+
                     },
                     color: const Color(0xC897C5F2),
                     shape: RoundedRectangleBorder(
