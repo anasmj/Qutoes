@@ -15,13 +15,13 @@ class Quote {
   final int? id;
   final String description;
   final String author;
-  final bool isFavorite;
+  bool isFavorite;
 
-  const Quote({
+  Quote({
     this.id,
     required this.description,
-    this.author ='',
-    this.isFavorite = false
+    this.author ='- unknown',
+    required this.isFavorite,
   });
   Quote copy({
     int? id,

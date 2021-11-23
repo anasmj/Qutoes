@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:untitled/db/db_helper.dart';
 import 'package:untitled/models/quote.dart';
 import 'package:untitled/widgets/quote_template.dart';
 import 'package:untitled/widgets/slidable_widget.dart';
 import 'dart:async';
+
+import 'package:untitled/widgets/toast_widget.dart';
 StreamController <Quote> streamController = StreamController();
 
 class MainPage extends StatefulWidget {
@@ -46,6 +49,7 @@ class _MainPageState extends State<MainPage> {
     DbHelper.instance.close();
   }
   void countItem () async => noOfItem = await DbHelper.instance.getCount();
+  @override
   Widget build(BuildContext context) {
     countItem();
     refresh ();
@@ -121,8 +125,6 @@ class _MainPageState extends State<MainPage> {
               ),
             ),
             child: Column(
-              // primary: false,
-              // shrinkWrap: true,
               children: <Widget>[
                 Padding(
                   padding: const EdgeInsets.only(
@@ -132,7 +134,6 @@ class _MainPageState extends State<MainPage> {
                     autofocus: true,
                     cursorHeight: 30.0,
                     maxLength: 500,
-                    //cursorColor: Colors.red,
                     maxLines: 5,
                     style: const TextStyle(
                       color: Colors.white,
@@ -173,7 +174,6 @@ class _MainPageState extends State<MainPage> {
                   child: RaisedButton(
                     onPressed: () {
                       if(quote!=null){
-                        print(quote.id);
                         DbHelper.instance.delete(quote.id!);
                         DbHelper.instance.update(quote.copy(
                           id: quote.id,
@@ -185,11 +185,14 @@ class _MainPageState extends State<MainPage> {
 
                       DbHelper.instance.insert(Quote(
                           description: quoteController.text,
-                          author: authorController.text));
+                          author: authorController.text,
+                          isFavorite: false,
+                      ));
                       refresh();
                       quoteController.clear();
                       authorController.clear();
                       Navigator.pop(context);
+                      showToast('Saved');
 
                     },
                     color: const Color(0xC897C5F2),

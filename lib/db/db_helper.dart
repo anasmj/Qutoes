@@ -35,7 +35,6 @@ class DbHelper {
     Database db = await instance.database;
 
     final id = await db.insert(quoteTable, quote.fromObjtoMap());
-    print('quote inserted in db');
     return quote.copy(id: id);
   }
 
@@ -50,7 +49,7 @@ class DbHelper {
     return map.isNotEmpty? Quote.fromMaptoObj(map.first): throw Exception('ID $id is invalid');
   }
   Future<List<Quote>> readAll() async{
-    final orderBy = '${QuoteFields.id} ASC';
+    const orderBy = '${QuoteFields.id} ASC';
     final db = await instance.database;
     final result = await db.query(quoteTable, orderBy: orderBy);
     return result.map((e)=>Quote.fromMaptoObj(e)).toList();
@@ -60,7 +59,7 @@ class DbHelper {
     return db.update(
       quoteTable,
       quote.fromObjtoMap(),
-      where: '${QuoteFields.id} =? ',
+      where: '${QuoteFields.id} = ? ',
       whereArgs: [quote.id]
     );
   }
@@ -72,17 +71,14 @@ class DbHelper {
       whereArgs: [id],
     );
   }
-
   Future<int> getCount() async {
     final db = await instance.database;
     List<Map<String, dynamic>> x = await db.rawQuery('SELECT COUNT (*) FROM $quoteTable');
     int? result = Sqflite.firstIntValue(x);
     return result?? 0 ;
   }
-
   Future close () async {
     final db =  await instance.database;
     db.close();
   }
-
 }
